@@ -405,3 +405,5 @@ HBase
 Hbase
 Hadoop
 ZooKeeper
+
+http://www.itdadao.com/articles/c15a48920p0.html
