@@ -1,0 +1,56 @@
+一，编译安装MYSQL前的准备工作
+安装编译源码所需的工具和库
+yum -y install  gcc gcc-c++ gcc-g77 autoconf automake zlib* fiex* libxml* ncurses-devel libmcrypt* libtool-ltdl-devel* make cmake
+
+安装cmake从http://www.cmake.org下载源码并编译安装
+wget http://www.cmake.org/files/v2.8/cmake-2.8.10.2.tar.gz
+
+tar -xzvf cmake-2.8.10.2.tar.gz 
+cd cmake-2.8.10.2 
+./bootstrap ; make ; make install
+cd ..
+`
+
+二、设置MySQL用户和组
+·新增mysql用户组 
+groupadd mysql 
+·新增mysql用户 
+useradd -r -g mysql mysql
+
+三、新建MySQL所需要的目录 
+·新建mysql安装目录 
+mkdir -p /usr/local/mysql
+
+
+四、下载MySQL源码包并解压 ·
+从http://dev.mysql.com/downloads/mysql/直接下载源码 
+·解压mysql-5.6.12.tar.gz 
+tar -zxv -f mysql-5.6.12.tar.gz 
+cd mysql-5.6.12
+
+五、编译安装MySQL
+·设置编译参数 
+cmake .
+
+·编译源码并安装
+make && make install
+
+六、修改mysql目录所有者和组 
+·修改mysql安装目录 
+chown -R mysql.mysql /usr/local/mysql
+
+
+七、初始化mysql数据库 
+cd /usr/local/mysql/scripts 
+ ./mysql_install_db --user=mysql --basedir=/usr/local/mysql --datadir=/usr/local/mysql/data
+
+cd /usr/local/mysql/support-files 
+cp mysql.server /etc/rc.d/init.d/mysql 
+cp my-default.cnf /etc/my.cnf 
+chkconfig -add mysql 
+chkconfig mysql on
+
+
+十、启动mysql服务并加入开机自启动 
+service mysqld start 
+chkconfig --level 35 mysqld on
