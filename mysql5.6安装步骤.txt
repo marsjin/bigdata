@@ -26,7 +26,7 @@ useradd -r -g mysql mysql
 mkdir -p /letv/mysql56  
 新建mysql数据库数据文件目录
 
-mkdir -p /data/mysqldb  
+mkdir -p /letv/mysql56/data
 
 四、下载MySQL源码包并解压
 
@@ -72,7 +72,7 @@ cmake \
 -DWITH_INNOBASE_STORAGE_ENGINE=1 \   
 -DWITH_ARCHIVE_STORAGE_ENGINE=1 \   
 -DWITH_BLACKHOLE_STORAGE_ENGINE=1 \   
--DMYSQL_DATADIR=/data/mysqldb \   
+-DMYSQL_DATADIR=/letv/mysql56/data\   
 -DMYSQL_TCP_PORT=3306 \   
 -DENABLE_DOWNLOADS=1  
 
@@ -90,12 +90,12 @@ cd /letv/mysql56
 chown -R mysql:mysql .  
 
 修改mysql数据库文件目录
-cd /data/mysqldb  
+cd /letv/mysql56/data 
 chown -R mysql:mysql .  
 
 七、初始化mysql数据库
 cd /letv/mysql56   
-scripts/mysql_install_db --user=mysql --datadir=/data/mysqldb  
+scripts/mysql_install_db --user=mysql --datadir=/letv/mysql56/data 
 
 八、复制mysql服务启动配置文件
 cp /letv/mysql56/support-files/my-default.cnf /letv/mysql56/etc/my.cnf  
