@@ -142,3 +142,5 @@ MySQL问题解决：-bash:mysql:command not found
 系统在/usr/bin下面查此命令,所以找不到了
    解决办法是：
 ln -s /letv/mysql56/bin/mysql /usr/bin　做个链接即可
+
+http://www.cnblogs.com/apexchu/p/4245278.html
