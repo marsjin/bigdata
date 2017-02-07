@@ -1,0 +1,50 @@
+#!/bin/bash
+#source ~/.bash_profile
+
+today=$(date +%Y%m%d)
+
+report=/letv/sh/tmp/report
+echo "Hi,各位集群用户
+当Hadoop集群空间使用量达到70%时，各位将会收到Warning邮件，提示清理空间;
+当Hadoop集群空间使用量到达80%时，各位将会收到Critical邮件， 提示清理空间;
+为保证集群数据安全，预留down机冗余空间，请各位务必清理，如因数据量确实巨大，集群无法容纳，请及时告知运维进行扩容，谢谢！">$report
+
+echo >>$report
+hdfs dfsadmin -report|head -n 11 >>$report
+
+echo ---------------------- >>$report
+echo dfs used details: >>$report
+hdfs dfs -du -h / >>$report
+echo >>$report
+hdfs dfs -du -h /user >>$report
+#echo >>$report
+#hadoop fs -du -h /user/hive/warehouse >>$report
+
+dfs_used_percent=`cat $report|grep "DFS Used%"|awk -F: '{print $2}'`
+dfs_used=`echo ${dfs_used_percent}|awk -F% '{print $1}'`
+
+
+# 百分百小数比较
+#expr ${dfs_used} \>\= 80
+
+user=jinzr@126.com
+title=`echo "${today}[${dfs_used_percent}] WBY Hadoop Cluster Hdfs Useage Report: dfs_used ${dfs_used_percent}"`
+echo "Title:"$title
+
+if [ $(expr ${dfs_used} \>\= 80) = 1 ];then
+  echo dfs_used 80
+  #cat $report|mail -s "Critical: $title" $user
+  cat $report|/usr/bin/mutt -s "Critical: $title" $user
+elif [ $(expr ${dfs_used} \>\= 70) = 1 ];then
+  echo 70
+  #cat $report|mail -s "Warning: $title" $user
+  cat $report|/usr/bin/mutt -s "Warning: $title" $user
+else
+  echo 60
+  #cat $report|mail -s "Normal: $title" $user
+  cat $report|/usr/bin/mutt -s "Normal: $title" $user
+fi
+
+#cat $report
+cat $report|mail -s $today DfsReport: dfs_used ${dfs_used_percent} jinzr@126.com
+
